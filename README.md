@@ -8,7 +8,7 @@ Requirements:
 * Sed
 * csv2ofx (optional - requires python - 'pip install csv2ofx' - instructions here - https://github.com/reubano/csv2ofx)
 
-Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py.
+Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py. I add a header to all my .csv files for manual editing and clarity. If you don't want to add a header, remove header insert line from your copy of the script and change your copy of the the mapping accordingly.
 
 # Usage:
 
