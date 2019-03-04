@@ -1,6 +1,6 @@
 # csv-cleaner
 
-Simple cli (command line interface) open source .csv (comma separated values) cleaner. I use it for preparing USAA .csv files for conversion to .ofx files for import to financial software like Quicken, Quickbooks, or open source Gnucash (https://gnucash.org). 
+Simple cli (command line interface) open source .csv (comma separated values) cleaner. I use it for preparing USAA .csv files for conversion to .qif/.ofx files for import to financial software like Quicken, Quickbooks, or open source Gnucash (https://gnucash.org). 
 
 ## Requirements:
 
