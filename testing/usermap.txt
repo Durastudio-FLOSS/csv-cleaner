@@ -1,0 +1,5 @@
+s/Cable\/Satellite Services/Online Services/g
+s/Transfers,340/Utilities,340/g
+s/,Checks,340/ - Tucson Electric Power,Utilities,340/g
+s/,Transfers,254.11/ - USAA Insurance,Home Insurance,254.11/g
+s/Home Improvement/Home Maintenance/g
