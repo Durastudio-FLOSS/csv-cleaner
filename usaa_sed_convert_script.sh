@@ -32,8 +32,10 @@ if [ $1 ]; then
    sed 's/Entertainment/Online Services/g' 05_finished_$1 > 06_final_$1 # Edit this. Foreach lists possible here.
    
    # Perform final in place substitutions read from usermap.txt
-   sed -i '' -f usermap.txt 06_final_$1
-   
+   if [ usermap.txt ]; then # If usermap.txt file exists locally, use it.
+      sed -i '' -f usermap.txt 06_final_$1
+   fi
+
    #sed "s/,-.*/&,/g" # unused 
    #csv2ofx -m usaa 06_final_$1 07_final_$1.ofx # uncomment if you have one .csv file. I cat mine.
  

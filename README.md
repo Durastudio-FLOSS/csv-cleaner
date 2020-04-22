@@ -16,6 +16,6 @@ I symlink to this file from my working directory. If you don't, be sure to use t
 
 sed_script <.csv_filename_to_convert>
 
-Copy, rename, edit to taste, and run the shell script for each individual account .csv file. Cat those files into one .csv master file. Convert that file using the commented csv2ofx command listed in the script. If you are lucky enough to have one .csv file for all accounts, uncomment the csv2ofx command and let the script make your .ofx file. Test your .ofx import on a dummy company. Make sure your .csv date ranges are correct as most import tools do not check for duplicate transactions. There's a provision for date ranges using cvs2ofx. (RTFM)
+Copy, rename, edit to taste, and run the shell script for each individual account .csv file. Additional substitution commands are listed in usermap.txt. The script will look for a file named usermap.txt in the working directory and ignore if not present. Cat output files (remove duplicate headers) into one .csv master file. Convert that file using the commented csv2ofx command listed in the script. If you are lucky enough to have one .csv file for all accounts, uncomment the csv2ofx command and let the script make your .ofx file. Test your .ofx import on a dummy company. Make sure your .csv date ranges are correct as most import tools do not check for duplicate transactions. There's a provision for date ranges using cvs2ofx. (RTFM)
 
 If it works, hurray! Share your work. Save us all some time. :)
