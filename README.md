@@ -20,7 +20,6 @@ If it works, hurray! Share your work. Save us all some time. :)
 
 ## Todo
 
-* Automation 
-* Documentation
-* Source Config file
+* Automation - find symlinks to self and act on raw data. eg monthly reporting.
+* Documentation - How to use
 * Substitution widget, append to command list.
