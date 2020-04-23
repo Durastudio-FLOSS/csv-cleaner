@@ -8,7 +8,7 @@ Simple cli (command line interface) open source .csv (comma separated values) cl
 * Sed
 * csv2ofx (optional - requires python - 'pip install csv2ofx' - instructions here - https://github.com/reubano/csv2ofx)
 
-Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py. I add a header to all my .csv files for manual editing and clarity. If you don't want to add a header, remove header insert line from your copy of the script and change your copy of the the mapping accordingly. Installing mapping files are covered at the csv2ofx site. (RTFM)
+Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py. I add a header to all my .csv files for manual editing and clarity. If you don't want to add a header, edit header="YES" in config.conf and update your copy of the the mapping file accordingly. Installing mapping files are covered at the csv2ofx site. (RTFM)
 
 ## Usage:
 
