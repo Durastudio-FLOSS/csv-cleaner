@@ -4,15 +4,51 @@
 # Header: Only need Date,Payee,Account,Amount. Remove unneccessary chaff.
 
 # Check for target file, rename/restore original as needed.
-if [[ -e $1 ]]; then
+if [[ -e $1 || $1 == "clean" || $1 == "archive" ]]; then
+   
+   # Check that log dir exists in working dir, create if not.
+   if ! [ -d log ]; then
+      mkdir -v log
+
+   fi
+
    # Source settings.
    . "${BASH_SOURCE%/*}/config.conf"
+   echo "Sourced config.conf" > log/$LOGFILENAME
 
-   # Check if in versions dir move up and execute.
+   # Check if in versions dir.
    if [[ "$(basename "$PWD")" == "$VERSIONS" ]]; then
       #echo "$(basename "$PWD") - $VERSIONS" # uncomment for testing
       echo "\n- ERROR - You are in the $VERSIONS directory, move up to your working directory.\n" 1>&2
       exit 1
+   fi
+
+# Check if in log dir.
+   if [[ "$(basename "$PWD")" == "log" ]]; then
+      echo "\n- ERROR - You are in the logging directory, move up to your working directory.\n" 1>&2
+      exit 1
+   fi
+
+   if [[ "$1" == "clean" ]]; then
+      echo "\n- TASK - Starting cleanup. Removing files and dir(s)...\n"
+      rm -v *.orig final*
+      rm -v versions/*  
+      rm -dv $VERSIONS
+      rm -v log/*
+      rm -dv log
+      echo "\n- TASK - Cleanup complete.\n"
+      exit 0
+   fi
+   
+   if [[ "$1" == "archive" ]]; then
+      echo "\n- TASK - Starting archive. Copying files and dir(s)...\n"
+      ARCHIVE="archive-$(date +%d%b%Y_%T)"
+      mkdir -v $ARCHIVE 
+      cp -v *.orig final* $ARCHIVE
+      cp -Rv versions $ARCHIVE
+      cp -Rv log $ARCHIVE
+      echo "\n- TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
+      exit 0
    fi
 
    if ! [[ -f $1.orig ]]; then
@@ -32,7 +68,7 @@ if [[ -e $1 ]]; then
    
    # Check that $VERSIONS dir exists in working dir, create if not.
    if ! [ -d $VERSIONS ]; then
-      mkdir $VERSIONS 
+      mkdir -v $VERSIONS 
    fi
 
    # Perform basic housekeeping.
