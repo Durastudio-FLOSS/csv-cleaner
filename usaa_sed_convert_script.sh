@@ -18,22 +18,26 @@ if [ $1 ]; then
 
    fi
 
+   VERSIONS="versions"
+
    # Insert CSV headers
    sed -i '' '1i\ 
    Date,Payee,Account,Amount
    ' $1
 
-   # Make versioned substitutions 
-   sed "s/posted,,//g" $1 > 01_remove_posted_$1
-   sed 's/,,/,/g' 01_remove_posted_$1 > 02_dbl_comma_$1
-   sed "s/,--/,+/g" 02_dbl_comma_$1 > 03_remove--$1
-   sed "s/,-/,/g" 03_remove--$1 > 04_remove-_$1
-   sed "s/,+/,-/g" 04_remove-_$1 > 05_finished_$1
-   sed 's/Entertainment/Online Services/g' 05_finished_$1 > 06_final_$1 # Edit this. Foreach lists possible here.
+   # Make versioned substitutions
+   if ! [ -d $VERSIONS ]; then
+      mkdir $VERSIONS 
+   fi
+   sed "s/posted,,//g" $1 > $VERSIONS/01_remove_posted_$1
+   sed 's/,,/,/g' $VERSIONS/01_remove_posted_$1 > $VERSIONS/02_dbl_comma_$1
+   sed "s/,--/,+/g" $VERSIONS/02_dbl_comma_$1 > $VERSIONS/03_remove--$1
+   sed "s/,-/,/g" $VERSIONS/03_remove--$1 > $VERSIONS/04_remove-_$1
+   sed "s/,+/,-/g" $VERSIONS/04_remove-_$1 > final_$1
    
    # Perform final in place substitutions read from usermap.txt
-   if [ usermap.txt ]; then # If usermap.txt file exists locally, use it.
-      sed -i '' -f usermap.txt 06_final_$1
+   if [ -e usermap.txt ]; then # If usermap.txt file exists locally, use it.
+      sed -i '' -f usermap.txt final_$1
    fi
 
    #sed "s/,-.*/&,/g" # unused 
