@@ -39,7 +39,7 @@ if [[ $1 ]]; then
    fi
 
    #sed "s/,-.*/&,/g" # unused 
-   #csv2ofx -m usaa 06_final_$1 07_final_$1.ofx # uncomment if you have one .csv file. I cat mine.
+   #csv2ofx -m usaa final_$1 final_$1.ofx # uncomment if you have one .csv file. I cat mine.
  
 else
 

@@ -26,6 +26,7 @@ If it works, hurray! Share your work. Save us all some time. :)
 
 ## Todo
 
+* Add stderr bash conventions and error checking
 * Automation - find symlinks to self and act on raw data. eg monthly reporting.
 * Prep for .ofx import - Cat individual account files and remove duplicate headers if present
 * Documentation - How to use
