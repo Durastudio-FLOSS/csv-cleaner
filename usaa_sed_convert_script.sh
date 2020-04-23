@@ -5,25 +5,23 @@
 # Header: Date,Payee,Account,Amount. Remove unneccessary fluff.
 
 # Check for target file, rename/restore original as needed
-if [ $1 ]; then
+if [[ $1 ]]; then
+   . "${BASH_SOURCE%/*}/config.conf"
 
-   if ! [ -f $1.orig ]; then
-
+   if ! [[ -f $1.orig ]]; then
       echo "Backing up original file $1"
       cp $1 $1.orig
-
    else
       echo "Restoring original file $1"
       cp $1.orig $1
-
    fi
 
-   VERSIONS="versions"
-
    # Insert CSV headers
-   sed -i '' '1i\ 
-   Date,Payee,Account,Amount
-   ' $1
+   if [[ $SHOW_HEADERS ]]; then
+      sed -i '' '1i\ 
+      Date,Payee,Account,Amount
+      ' $1
+   fi
 
    # Make versioned substitutions
    if ! [ -d $VERSIONS ]; then
