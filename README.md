@@ -14,12 +14,19 @@ Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py. I add a header to
 
 I symlink to this file from my working directory. If you don't, be sure to use the full path when invoking the script, e.g sed_script <.csv_filename_to_convert>. As always, you could install system wide or simply add the script to your path.  
 
-Copy, rename, edit to taste, and run the shell script for each individual account .csv file. Additional substitution commands are listed in usermap.txt. The script will look for a file named usermap.txt in the working directory and ignore if not present. Cat output files (remove duplicate headers) into one .csv master file. Convert that file using the commented csv2ofx command listed in the script. If you are lucky enough to have one .csv file for all accounts, uncomment the csv2ofx command and let the script make your .ofx file. Test your .ofx import on a dummy company. Make sure your .csv date ranges are correct as most import tools do not check for duplicate transactions. There's a provision for date ranges using cvs2ofx. (RTFM)
+* Copy, rename script, edit config to taste.
+* Run the shell script for each individual account .csv file.
+* Additional substitution commands are listed in usermap.txt. The script will look for a file named usermap.txt in the working directory and ignore if not present.
+* Cat output files (remove duplicate headers) into one .csv master file.
+* Convert file(s) using the csv2ofx command listed in the script. If you are lucky enough to have one .csv file for all accounts, uncomment the csv2ofx command and let the script make your .ofx file.
+* Test your .ofx import on a dummy company.
+* Make sure your .csv date ranges are correct as most import tools do not check for duplicate transactions. There's a provision for date ranges using cvs2ofx. (RTFM)
 
 If it works, hurray! Share your work. Save us all some time. :)
 
 ## Todo
 
 * Automation - find symlinks to self and act on raw data. eg monthly reporting.
+* Prep for .ofx import - Cat individual account files and remove duplicate headers if present
 * Documentation - How to use
 * Substitution widget, append to command list.
