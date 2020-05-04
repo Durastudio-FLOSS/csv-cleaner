@@ -14,8 +14,8 @@ Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py. I add a header to
 
 Run csv-cleaner.sh the first time with full path. Then use the symlink in your working directory. When you run 'clean' it will remove all working files and links.
 
-* You must edit script to use. 
-* Additional sed substitution commands are listed in usermap.txt. eg s/entry-you-don't-want/new-entry/g - one comand per line. See Sed manual on '-f script-file' command option. https://www.gnu.org/software/sed/manual/sed.html#sed-commands-list
+* You must edit config and usermap.txt. 
+* Defaults copy usermap.sample to usermap.txt in your working directiory. Additional sed substitution commands are listed here. eg s/entry-you-don't-want/new-entry/g - one comand per line. See Sed manual on '-f script-file' command option. https://www.gnu.org/software/sed/manual/sed.html#sed-commands-list
 * Cat individual output files (remove duplicate headers) into one .csv master file.
 * Convert file(s) using the csv2ofx command listed in the script. If you are lucky enough to have one .csv file for all accounts, uncomment the csv2ofx command and let the script make your .ofx file.
 * Test your .ofx import on a dummy company.
