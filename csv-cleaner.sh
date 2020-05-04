@@ -20,6 +20,10 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" ]]; then
       ln -s "${BASH_SOURCE%/*}/config.conf"
    fi
 
+   if [[ $COPY_USERMAP_SAMPLE ]] && ! [[ -e usermap.txt ]]; then
+      cp "${BASH_SOURCE%/*}/usermap.sample usermap.txt"
+   fi
+
    if ! [[ "$(basename "$1")" == "$1" ]]; then
       ln -s "$1" $(basename "$1")
    fi
