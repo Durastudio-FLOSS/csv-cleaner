@@ -20,11 +20,7 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
 
    # Source settings.
    . "${BASH_SOURCE%/*}/config.conf"
-<<<<<<< HEAD
    echo " - TASK - Sourced config.conf" > log/$LOGFILENAME
-=======
-   echo "- NOTICE - Sourced config.conf" > log/$LOGFILENAME
->>>>>>> cc1a83c634fcc630418757dbde69836d06212059
 
    if [[ $SYMLINKSRC ]] && ! [[ -e csv-cleaner ]]; then
       ln -s "$0" csv-cleaner
@@ -45,18 +41,13 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
 
    # Check if in versions dir.
    if [[ "$(basename "$PWD")" == "versions" ]]; then
-<<<<<<< HEAD
       #echo "$(basename "$PWD") - versions" # uncomment for testing
       echo "\n - ERROR - You are in the versions directory, move up to your working directory.\n" 1>&2
-=======
-      echo "- ERROR - You are in the versions directory, move up to your working directory." 1>&2
->>>>>>> cc1a83c634fcc630418757dbde69836d06212059
       exit 1
    fi
 
 # Check if in log dir.
    if [[ "$(basename "$PWD")" == "log" ]]; then
-<<<<<<< HEAD
       echo "\n - ERROR - You are in the logging directory, move up to your working directory.\n" 1>&2
       exit 1
    fi
@@ -64,15 +55,7 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    if [[ "$1" == "clean" ]]; then
       echo "\n - TASK - Starting cleanup. Removing files and dir(s)...\n"
       rm -v final*
-=======
-      echo "- ERROR - You are in the logging directory, move up to your working directory." 1>&2
-      exit 1
-   fi
-
-   if [[ "$1" == "clean" ]] && [[ ! -e working_copy.csv ]]; then
-      echo "- TASK - Starting cleanup. Removing files and dir(s)."
       rm -v cleaned*
->>>>>>> cc1a83c634fcc630418757dbde69836d06212059
       rm -v versions/*  
       rm -dv versions
       rm -v log/*
@@ -90,18 +73,14 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    fi
    
    if [[ "$1" == "archive" ]]; then
-<<<<<<< HEAD
       echo "\n - TASK - Starting archive. Copying files and dir(s)...\n"
-=======
-      echo "- TASK - Starting archive. Copying files and dir(s)..." >> log/$LOGFILENAME
->>>>>>> cc1a83c634fcc630418757dbde69836d06212059
       ARCHIVE="archive-$(date +%d%b%Y_%T)"
       mkdir -v $ARCHIVE 
       cp -v cleaned* $ARCHIVE
       cp -Rv versions $ARCHIVE
       echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
       cp -Rv log $ARCHIVE
-<<<<<<< HEAD
+
       if [[ $EXPORT_NUM_COLS == 2 ]]; then
          sed -i "" s/,^[0-9]*$/,,/g final_$(basename "$1") > export_$(basename "$1")
          sed -i "" s/,^-[0-9]*$/,1,/g export_$(basename "$1")
@@ -109,15 +88,13 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       elif
          cp final_$(basename "$1") export_$(basename "$1")
       fi   
-      echo "\n - TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
-=======
+
       orig_fname=$(<.orig_fname.txt)
       echo "- TASK - Restoring original file: $orig_fname" >> log/$LOGFILENAME
       cp -v working_copy.csv $orig_fname
       rm -v working_copy.csv
       cp cleaned_$ORIGINAL cleaned_$orig_fname
-      echo "- TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files." >> log/$LOGFILENAME
->>>>>>> cc1a83c634fcc630418757dbde69836d06212059
+      echo "\n - TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
       exit 0
    fi
 
