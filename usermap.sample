@@ -1,0 +1,3 @@
+#remove this comment line as you edit these command entries. Sed thinks everything in this file is a command.
+s/what-you-don-t-want/what-you-want/g
+s/another-string-to-find/another-string-substitution/g
