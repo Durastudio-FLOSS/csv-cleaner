@@ -79,21 +79,21 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       cp -v cleaned* $ARCHIVE
       cp -Rv versions $ARCHIVE
       echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
-      cp -Rv log $ARCHIVE
 
       if [[ $EXPORT_NUM_COLS == 2 ]]; then
-         sed -i "" s/,^[0-9]*$/,,/g final_$(basename "$1") > export_$(basename "$1")
-         sed -i "" s/,^-[0-9]*$/,1,/g export_$(basename "$1")
+         sed -i "" s/,^[0-9].[0-9]*$/,,/g final_$(basename "$1") > export_$(basename "$1")
+         sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$(basename "$1")
          sed s/,^-[0-9]*$/,1/g export_$(basename "$1")
       elif
          cp final_$(basename "$1") export_$(basename "$1")
       fi   
 
       orig_fname=$(<.orig_fname.txt)
-      echo "- TASK - Restoring original file: $orig_fname" >> log/$LOGFILENAME
+      echo " - TASK - Restoring original file: $orig_fname" >> log/$LOGFILENAME
       cp -v working_copy.csv $orig_fname
       rm -v working_copy.csv
       cp cleaned_$ORIGINAL cleaned_$orig_fname
+      cp -Rv log $ARCHIVE
       echo "\n - TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
       exit 0
    fi
