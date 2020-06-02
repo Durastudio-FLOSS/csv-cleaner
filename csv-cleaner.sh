@@ -13,7 +13,7 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" ]]; then
 
    # Source settings.
    . "${BASH_SOURCE%/*}/config.conf"
-   echo "Sourced config.conf" > log/$LOGFILENAME
+   echo " - TASK - Sourced config.conf" > log/$LOGFILENAME
 
    if [[ $SYMLINKSRC ]] && ! [[ -e csv-cleaner ]]; then
       ln -s "$0" csv-cleaner
@@ -27,18 +27,18 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" ]]; then
    # Check if in versions dir.
    if [[ "$(basename "$PWD")" == "versions" ]]; then
       #echo "$(basename "$PWD") - versions" # uncomment for testing
-      echo "\n- ERROR - You are in the versions directory, move up to your working directory.\n" 1>&2
+      echo "\n - ERROR - You are in the versions directory, move up to your working directory.\n" 1>&2
       exit 1
    fi
 
 # Check if in log dir.
    if [[ "$(basename "$PWD")" == "log" ]]; then
-      echo "\n- ERROR - You are in the logging directory, move up to your working directory.\n" 1>&2
+      echo "\n - ERROR - You are in the logging directory, move up to your working directory.\n" 1>&2
       exit 1
    fi
 
    if [[ "$1" == "clean" ]]; then
-      echo "\n- TASK - Starting cleanup. Removing files and dir(s)...\n"
+      echo "\n - TASK - Starting cleanup. Removing files and dir(s)...\n"
       rm -v final*
       rm -v versions/*  
       rm -dv versions
@@ -53,13 +53,21 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" ]]; then
    fi
    
    if [[ "$1" == "archive" ]]; then
-      echo "\n- TASK - Starting archive. Copying files and dir(s)...\n"
+      echo "\n - TASK - Starting archive. Copying files and dir(s)...\n"
       ARCHIVE="archive-$(date +%d%b%Y_%T)"
       mkdir -v $ARCHIVE 
       cp -v final* $ARCHIVE
       cp -Rv versions $ARCHIVE
+      echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
       cp -Rv log $ARCHIVE
-      echo "\n- TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
+      if [[ $EXPORT_NUM_COLS == 2 ]]; then
+         sed -i "" s/,^[0-9]*$/,,/g final_$(basename "$1") > export_$(basename "$1")
+         sed -i "" s/,^-[0-9]*$/,1,/g export_$(basename "$1")
+         sed s/,^-[0-9]*$/,1/g export_$(basename "$1")
+      elif
+         cp final_$(basename "$1") export_$(basename "$1")
+      fi   
+      echo "\n - TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
       exit 0
    fi
 
