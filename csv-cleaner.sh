@@ -26,17 +26,17 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       ln -s "$0" csv-cleaner
       echo "Created symlink to $0" >> log/$LOGFILENAME
       ln -s "${BASH_SOURCE%/*}/config.conf"
-      echo "- TASK - Created symlink to config.conf" >> log/$LOGFILENAME
+      echo " - TASK - Created symlink to config.conf" >> log/$LOGFILENAME
    fi
 
    if [[ $COPY_USERMAP_SAMPLE ]] && ! [[ -e usermap.txt ]]; then
       cp "${BASH_SOURCE%/*}/usermap.sample usermap.txt"
-      echo "- TASK - Copied usermap.sample to usermap.txt" >> log/$LOGFILENAME
+      echo " - TASK - Copied usermap.sample to usermap.txt" >> log/$LOGFILENAME
    fi
 
    if ! [[ "$(basename "$1")" == "$1" ]]; then
       ln -s "$1" $(basename "$1")
-      echo "- TASK - Created symlink to $1" >> log/$LOGFILENAME
+      echo " - TASK - Created symlink to $1" >> log/$LOGFILENAME
    fi
 
    # Check if in versions dir.
@@ -54,7 +54,6 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
 
    if [[ "$1" == "clean" ]]; then
       echo "\n - TASK - Starting cleanup. Removing files and dir(s)...\n"
-      rm -v final*
       rm -v cleaned*
       rm -v versions/*  
       rm -dv versions
@@ -65,10 +64,10 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
          rm "csv-cleaner"
          rm "config.conf"
       fi
-      echo "- TASK - Cleanup complete."
+      echo " - TASK - Cleanup complete."
       exit 0
    elif [[ "$1" == "clean" ]]; then
-      echo "- ERROR - Run 'archive' before 'clean.'"
+      echo " - ERROR - Run 'archive' before 'clean.'"
       exit 0
    fi
    
@@ -81,11 +80,11 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
 
       if [[ $EXPORT_NUM_COLS == 2 ]]; then
-         sed -i "" s/,^[0-9].[0-9]*$/,,/g final_$(basename "$1") > export_$(basename "$1")
-         sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$(basename "$1")
-         sed s/,^-[0-9]*$/,1/g export_$(basename "$1")
+         sed -i "" s/,^[0-9].[0-9]*$/,,/g cleaned_$ORIGINAL > export_$ORIGINAL # Add column
+         sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$ORIGINAL # Add column, move data
+         sed s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved data
       elif
-         cp final_$(basename "$1") export_$(basename "$1")
+         cp cleaned_$ORIGINAL export_$ORIGINAL
       fi   
 
       orig_fname=$(<.orig_fname.txt)
@@ -99,11 +98,11 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    fi
 
    if ! [[ -e working_copy.csv && $1 != "archive" ]]; then
-      echo "- TASK - Backing up original file $1 to working_copy.csv" >> log/$LOGFILENAME
+      echo " - TASK - Backing up original file $1 to working_copy.csv" >> log/$LOGFILENAME
       cp $1 working_copy.csv
       echo "$1" > .orig_fname.txt 
    else
-      echo "- NOTICE - Working files found, nothing to see here, move on." >> log/$LOGFILENAME
+      echo " - NOTICE - Working files found, nothing to see here, move on." >> log/$LOGFILENAME
    fi
 
    # Insert CSV headers.
@@ -119,7 +118,7 @@ Date,Payee,Account,Amount
    fi
 
    # Perform basic housekeeping.
-   echo "- TASK - Cleaning $ORIGINAL" >> log/$LOGFILENAME
+   echo " - TASK - Cleaning $ORIGINAL" >> log/$LOGFILENAME
    sed "s/posted,,//g" $ORIGINAL > versions/01_remove_posted_$ORIGINAL
    sed 's/,,/,/g' versions/01_remove_posted_$ORIGINAL > versions/02_dbl_comma_$ORIGINAL
    sed "s/,--/,+/g" versions/02_dbl_comma_$ORIGINAL > versions/03_remove--$ORIGINAL
@@ -128,7 +127,7 @@ Date,Payee,Account,Amount
    
    # Perform final in place substitutions read from usermap.txt.
    if [ -e usermap.txt ]; then # If usermap.txt file exists locally, use it.
-      echo "- TASK - Applying usermap.txt commands." >> log/$LOGFILENAME
+      echo " - TASK - Applying usermap.txt commands." >> log/$LOGFILENAME
       sed -i '' -f usermap.txt cleaned_$ORIGINAL
    fi
 
@@ -137,12 +136,12 @@ Date,Payee,Account,Amount
    # Uncomment if you have one .csv file.
    #csv2ofx -m usaa final_$1 final_$1.ofx
 
-   echo "- NOTICE - Csv Cleaner complete." >> log/$LOGFILENAME
+   echo " - NOTICE - Csv Cleaner complete." >> log/$LOGFILENAME
    cat log/$LOGFILENAME
 
 else
 
-   echo "\n- USAGE - You must provide a target file and it must exist, no stdin. Eejit.\n" 1>&2
+   echo "\n - USAGE - You must provide a target file and it must exist, no stdin. Eejit.\n" 1>&2
    exit 1
 
 fi
