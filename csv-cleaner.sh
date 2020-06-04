@@ -9,7 +9,7 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    # Update $1 for working script link
    if ! [[ "$1" ]]; then
       ORIGINAL="working_copy.csv"
-   elif [[ $1 != "clean" || $1 != "archive" ]]; then
+   elif ! [[ $1 == "clean" || $1 == "archive" || $1 == "export" ]]; then
       ORIGINAL="$1"
    fi
 
@@ -24,7 +24,7 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
 
    if [[ $SYMLINKSRC ]] && ! [[ -e csv-cleaner ]]; then
       ln -s "$0" csv-cleaner
-      echo "Created symlink to $0" >> log/$LOGFILENAME
+      echo " - TASK - Created symlink to $0" >> log/$LOGFILENAME
       ln -s "${BASH_SOURCE%/*}/config.conf"
       echo " - TASK - Created symlink to config.conf" >> log/$LOGFILENAME
    fi
@@ -55,6 +55,7 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    if [[ "$1" == "clean" ]]; then
       echo "\n - TASK - Starting cleanup. Removing files and dir(s)...\n"
       rm -v cleaned*
+      rm -v sorted*
       rm -v versions/*  
       rm -dv versions
       rm -v log/*
@@ -76,22 +77,31 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       ARCHIVE="archive-$(date +%d%b%Y_%T)"
       mkdir -v $ARCHIVE 
       cp -v cleaned* $ARCHIVE
-      cp -Rv versions $ARCHIVE
-      echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
+      cp -Rv versions $ARCHIVE  
 
-      if [[ $EXPORT_NUM_COLS == 2 ]]; then
-         sed -i "" s/,^[0-9].[0-9]*$/,,/g cleaned_$ORIGINAL > export_$ORIGINAL # Add column
-         sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$ORIGINAL # Add column, move data
-         sed s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved data
-      elif
-         cp cleaned_$ORIGINAL export_$ORIGINAL
-      fi   
-
+      # Restore original and delete working files
       orig_fname=$(<.orig_fname.txt)
       echo " - TASK - Restoring original file: $orig_fname" >> log/$LOGFILENAME
-      cp -v working_copy.csv $orig_fname
-      rm -v working_copy.csv
-      cp cleaned_$ORIGINAL cleaned_$orig_fname
+      cp -v $ORIGINAL $orig_fname
+      rm -v $ORIGINAL
+      rm -v working*
+      
+      # Export feature will pull in other sed rules for various formatting needs.
+      sed s/^.*,'\([A-Za-z]* *[A-Za-z]*[\/*\:* \& *]*[A-Za-z]* *[A-Za-z]*\)',-*[0-9]*.[0-9]*$/\\1/g cleaned_$orig_fname > accounts_$orig_fname  # Export accounts
+
+      echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
+      if [[ $EXPORT_NUM_COLS == 2 ]]; then
+         sed s/,'\([0-9]*.[0-9]*\)'$/,\\1,/g cleaned_$orig_fname > export_$orig_fname  # Add column
+         sed -i "" s/,'\(-[0-9]*.[0-9]*\)'$/,,\\1/g export_$orig_fname # Add column, move data
+
+         if [[ $CHANGE_SIGN == "YES" ]]; then
+            sed -i "" s/,-'\([0-9]*.[0-9]*\)'$/,\\1/g export_$orig_fname # Change sign of credits
+         fi
+
+      else
+         cp -v cleaned_$orig_fname export_$orig_fname
+      fi
+
       cp -Rv log $ARCHIVE
       echo "\n - TASK - Archive to $ARCHIVE complete. Run 'clean' to remove working files.\n"
       exit 0
@@ -106,11 +116,11 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    fi
 
    # Insert CSV headers.
-   if [[ $SHOW_HEADERS ]]; then
-sed -i '' '1i\
-Date,Payee,Account,Amount
-' $1
-   fi
+#   if [[ $SHOW_HEADERS == "YES" ]]; then
+#sed -i '' '1i\
+#Date,Payee,Account,Amount
+#' $1
+#   fi
    
    # Check that versions dir exists in working dir, create if not.
    if ! [ -d versions ]; then
@@ -122,7 +132,7 @@ Date,Payee,Account,Amount
    sed "s/posted,,//g" $ORIGINAL > versions/01_remove_posted_$ORIGINAL
    sed 's/,,/,/g' versions/01_remove_posted_$ORIGINAL > versions/02_dbl_comma_$ORIGINAL
    sed "s/,--/,+/g" versions/02_dbl_comma_$ORIGINAL > versions/03_remove--$ORIGINAL
-   sed "s/,-/,/g" versions/03_remove--$ORIGINAL > versions/04_remove-_$ORIGINAL
+   sed "s/,- /,/g" versions/03_remove--$ORIGINAL > versions/04_remove-_$ORIGINAL
    sed "s/,+/,-/g" versions/04_remove-_$ORIGINAL > cleaned_$ORIGINAL
    
    # Perform final in place substitutions read from usermap.txt.
@@ -131,9 +141,13 @@ Date,Payee,Account,Amount
       sed -i '' -f usermap.txt cleaned_$ORIGINAL
    fi
 
-   #sed "s/,-.*/&,/g" # unused 
+   # Sort and Copy
+   sed -i "" /Date,Payee,Account,Amount/d # remove header line(s) if present
+   echo " - TASK - Sorting file cleaned_$ORIGINAL to sorted_$ORIGINAL >> log/$LOGFILENAME
+   sort -t , -k 1b cleaned_$ORIGINAL > sorted_$ORIGINAL
+   cp -v sorted_$ORIGINAL cleaned_$orig_fname
 
-   # Uncomment if you have one .csv file.
+   # Uncomment if you have one .csv file. # Todo make from config
    #csv2ofx -m usaa final_$1 final_$1.ofx
 
    echo " - NOTICE - Csv Cleaner complete." >> log/$LOGFILENAME
