@@ -8,3 +8,4 @@
 * Prep for .ofx import - Cat individual account files and remove duplicate headers if present
 * Documentation - How to use
 * Substitution widget, append to command list.
+* Add feature to pull all sed commands from files

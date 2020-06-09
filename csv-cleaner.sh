@@ -138,14 +138,20 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       mkdir -v versions 
    fi
 
-   # Perform basic housekeeping.
-   echo " - TASK - Cleaning $ORIGINAL" >> log/$LOGFILENAME
-   sed "s/posted,,//g" $ORIGINAL > versions/01_remove_posted_$ORIGINAL
-   sed 's/,,/,/g' versions/01_remove_posted_$ORIGINAL > versions/02_dbl_comma_$ORIGINAL
-   sed "s/,--/,+/g" versions/02_dbl_comma_$ORIGINAL > versions/03_remove--$ORIGINAL
-   sed "s/,- /,/g" versions/03_remove--$ORIGINAL > versions/04_remove-_$ORIGINAL
-   sed "s/,+/,-/g" versions/04_remove-_$ORIGINAL > cleaned_$ORIGINAL
-   
+   # Perform USAA basic housekeeping. # Add and comment lines as needed for testing. 
+   if [[ TESTING="YES" ]]; then
+      echo " - TASK - Cleaning $ORIGINAL" >> log/$LOGFILENAME
+      sed "s/posted,,//g" $ORIGINAL > versions/01_remove_posted_$ORIGINAL # USAA
+      sed 's/,,/,/g' versions/01_remove_posted_$ORIGINAL > versions/02_dbl_comma_$ORIGINAL # USAA
+      sed "s/,--/,+/g" versions/02_dbl_comma_$ORIGINAL > versions/03_remove--$ORIGINAL # USAA
+      sed "s/,- /,/g" versions/03_remove--$ORIGINAL > versions/04_remove-_$ORIGINAL # USAA
+      sed "s/,+/,-/g" versions/04_remove-_$ORIGINAL > cleaned_$ORIGINAL # USAA
+   else
+      echo " - TASK - Applying account substitution commands from $HOUSECLEANING file." >> log/$LOGFILENAME
+      sed -i '' -f $HOUSECLEANING $ORIGINAL
+      cp -v $ORIGNAL cleaned_$ORiGINAL 
+   fi
+
    # Perform final in place substitutions read from usermap.txt.
    if [ -e usermap.txt ]; then # If usermap.txt file exists locally, use it.
       echo " - TASK - Applying usermap.txt commands." >> log/$LOGFILENAME
