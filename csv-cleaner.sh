@@ -155,12 +155,12 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    # Perform final in place substitutions read from usermap.txt.
    if [ -e usermap.txt ]; then # If usermap.txt file exists locally, use it.
       echo " - TASK - Applying usermap.txt commands." >> log/$LOGFILENAME
-      sed -i '' -f usermap.txt cleaned_$ORIGINAL
+      sed -i "" -f usermap.txt cleaned_$ORIGINAL
    fi
 
    # Sort and Copy
    sed -i "" /Date,Payee,Account,Amount/d # remove header line(s) if present
-   echo " - TASK - Sorting file cleaned_$ORIGINAL to sorted_$ORIGINAL >> log/$LOGFILENAME
+   echo " - TASK - Sorting file cleaned_$ORIGINAL to sorted_$ORIGINAL" >> log/$LOGFILENAME
    sort -t , -k 1b cleaned_$ORIGINAL > sorted_$ORIGINAL
    cp -v sorted_$ORIGINAL cleaned_$orig_fname
 
