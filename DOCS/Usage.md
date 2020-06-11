@@ -1,14 +1,4 @@
-# csv-cleaner # EDIT THIS FOR DOCUMENTATION
-
-Simple cli (command line interface) open source .csv (comma separated values) cleaner. I use it for preparing USAA .csv files for conversion to .ofx files for import to financial software like Quicken, Quickbooks, or open source Gnucash (https://gnucash.org). 
-
-## Requirements:
-
-* Bash (or equivalent) 
-* Sed
-* csv2ofx (optional - requires python - 'pip install csv2ofx' - instructions here - https://github.com/reubano/csv2ofx)
-
-Mapping file(s) are included for csv2ofx, e.g mapping/usaa.py. I add a header to all my .csv files for manual editing and clarity. If you don't want to add a header, edit header="YES" in config.conf and update your copy of the the mapping file accordingly. Installing mapping files are covered at the csv2ofx site. (RTFM)
+# csv-cleaner-docs-usage
 
 ## Usage:
 
@@ -22,12 +12,3 @@ Run csv-cleaner.sh the first time with full path. Then use the symlink in your w
 * Make sure your .csv date ranges are correct as most import tools do not check for duplicate transactions. There's a provision for date ranges using cvs2ofx. (RTFM)
 
 If it works, hurray! Share your work. Save us all some time. :)
-
-## Todo
-
-* Add stderr bash conventions and error checking
-* Git project settings
-* Automation - find symlinks to self and act on raw data. eg monthly reporting.
-* Prep for .ofx import - Cat individual account files and remove duplicate headers if present
-* Documentation - How to use
-* Substitution widget, append to command list.
