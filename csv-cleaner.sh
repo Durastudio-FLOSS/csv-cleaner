@@ -86,10 +86,9 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
          sed s/,^[0-9].[0-9]*$/,,/g cleaned_$ORIGINAL > export_$ORIGINAL # Add debits column to credits entries
          sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$ORIGINAL # Add debits column to debits entries, move debits
          sed -i s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debits
-      elif
+      else
          cp cleaned_$ORIGINAL export_$ORIGINAL
-      fi   
-
+      fi      
       # Restore original and delete working files
       orig_fname=$(<.orig_fname.txt)
       echo " - TASK - Restoring original file: $orig_fname" >> log/$LOGFILENAME

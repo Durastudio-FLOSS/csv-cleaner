@@ -9,3 +9,4 @@
 * Documentation - How to use
 * Substitution widget, append to command list.
 * Add feature to pull all sed commands from files
+*"Scripts that assume /bin/sh supports extensions like this will break on OSes like recent Debian and Ubuntu releases where that's not the case" This a problem?
