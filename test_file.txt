@@ -1,0 +1,6 @@
+Date, Payee, amount,   cost,   mood,   time, 
+1	me	5	55	sad	11pm
+2	you	5	66	yay	12am
+3	him	7	11	wow	10pm
+6	her	9	28	huh	12am
+1	zi	7	37	wha	12pm
