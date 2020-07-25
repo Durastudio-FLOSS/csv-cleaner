@@ -85,11 +85,9 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       if [[ $EXPORT_NUM_COLS == 2 ]]; then
          sed s/,^[0-9].[0-9]*$/,,/g cleaned_$ORIGINAL > export_$ORIGINAL # Add debits column to credits entries
          sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$ORIGINAL # Add debits column to debits entries, move debits
-<<<<<<< HEAD
-         sed -i s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debits
-=======
+         sed -i s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debit
          sed -i "" s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debits
->>>>>>> 72ad6c2070c02db0cdaed7d5e4c2add1c3b51529
+
       else
          cp cleaned_$ORIGINAL export_$ORIGINAL
       fi      
