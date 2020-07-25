@@ -83,10 +83,10 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
 
       if [[ $EXPORT_NUM_COLS == 2 ]]; then
-         sed s/,^[0-9].[0-9]*$/,,/g cleaned_$ORIGINAL > export_$ORIGINAL # Add debits column to credits entries
-         sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$ORIGINAL # Add debits column to debits entries, move debits
-         sed -i s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debit
-         sed -i "" s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debits
+         sed s/,^[0-9].[0-9]*$/,,/g cleaned_$ORIGINAL > export_$ORIGINAL # Add debits column to credits entries - matches , before a line with number.any # of numbers or nothing replaces w/ ,,
+         sed -i "" s/,^-[0-9].[0-9]*$/,1.2,/g export_$ORIGINAL # Add debits column to debits entries, move debits - matches , before a line with neg num.any num number or none replaces with ,1.2, 
+         sed -i s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debit - matches , before a line with - any number numbers or nothing replaces with ,1
+         sed -i "" s/,^-[0-9]*$/,1/g export_$ORIGINAL # Change sign of moved debits - same as above
 
       else
          cp cleaned_$ORIGINAL export_$ORIGINAL
@@ -100,14 +100,14 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
       
       # Export feature will pull in other sed rules for various formatting needs.
       sed s/^.*,'\([A-Za-z]* *[A-Za-z]*[\/*\:* \& *]*[A-Za-z]* *[A-Za-z]*\)',-*[0-9]*.[0-9]*$/\\1/g cleaned_$orig_fname > accounts_$orig_fname  # Export accounts
-
+#gets rid of all featurs proceeding and numbers/', following a line that contains any or no word then any or no spaces then any or no word then any or no \: space $ then any or no spcaes then any or no words then any or no spaces then any or no words
       echo "\n - TASK - Exporting in $EXPORT_NUM_COLS columns format.\n"
       if [[ $EXPORT_NUM_COLS == 2 ]]; then
-         sed s/,'\([0-9]*.[0-9]*\)'$/,\\1,/g cleaned_$orig_fname > export_$orig_fname  # Add column
-         sed -i "" s/,'\(-[0-9]*.[0-9]*\)'$/,,\\1/g export_$orig_fname # Add column, move data
+         sed s/,'\([0-9]*.[0-9]*\)'$/,\\1,/g cleaned_$orig_fname > export_$orig_fname  # Add column -removes ,' proceding and ' trailing number.number or nothing and puts , before and after 
+         sed -i "" s/,'\(-[0-9]*.[0-9]*\)'$/,,\\1/g export_$orig_fname # Add column, move data -removes ,' proceeding and ' trailing  neg number.number and adds ,, before
 
          if [[ $CHANGE_SIGN == "YES" ]]; then
-            sed -i "" s/,-'\([0-9]*.[0-9]*\)'$/,\\1/g export_$orig_fname # Change sign of credits
+            sed -i "" s/,-'\([0-9]*.[0-9]*\)'$/,\\1/g export_$orig_fname # Change sign of credits -removes proceeding ,-' and trailing ' from number.number and puts , before 
          fi
 
       else
@@ -142,11 +142,11 @@ if [[ -e $1 || $1 == "clean" || $1 == "archive" || -e working_copy.csv ]]; then
    # Perform USAA basic housekeeping. # Add and comment lines as needed for testing. 
    if [[ TESTING="YES" ]]; then
       echo " - TASK - Cleaning $ORIGINAL" >> log/$LOGFILENAME
-      sed "s/posted,,//g" $ORIGINAL > versions/01_remove_posted_$ORIGINAL # USAA
-      sed 's/,,/,/g' versions/01_remove_posted_$ORIGINAL > versions/02_dbl_comma_$ORIGINAL # USAA
-      sed "s/,--/,+/g" versions/02_dbl_comma_$ORIGINAL > versions/03_remove--$ORIGINAL # USAA
-      sed "s/,- /,/g" versions/03_remove--$ORIGINAL > versions/04_remove-_$ORIGINAL # USAA
-      sed "s/,+/,-/g" versions/04_remove-_$ORIGINAL > cleaned_$ORIGINAL # USAA
+      sed "s/posted,,//g" $ORIGINAL > versions/01_remove_posted_$ORIGINAL # USAA -replace posted ,, w/ nothing
+      sed 's/,,/,/g' versions/01_remove_posted_$ORIGINAL > versions/02_dbl_comma_$ORIGINAL # USAA -replace ,, with ,
+      sed "s/,--/,+/g" versions/02_dbl_comma_$ORIGINAL > versions/03_remove--$ORIGINAL # USAA -replace ,-- with ,+
+      sed "s/,- /,/g" versions/03_remove--$ORIGINAL > versions/04_remove-_$ORIGINAL # USAA -replace ,- with ,
+      sed "s/,+/,-/g" versions/04_remove-_$ORIGINAL > cleaned_$ORIGINAL # USAA -replace ,+ with ,-
    else
       echo " - TASK - Applying account substitution commands from $HOUSECLEANING file." >> log/$LOGFILENAME
       sed -i '' -f $HOUSECLEANING $ORIGINAL
