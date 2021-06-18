@@ -1,5 +1,6 @@
 #!/bin/sh
-
+# Usage: Script accepets a .csv filename for processings. Then 'archive' and 'clean'.
+ 
 # NOTE: Debit amounts are always positive, credit amounts are always negative.
 # Header: Only need Date,Payee,Account,Amount. Remove unneccessary chaff.
 
